@@ -1,7 +1,8 @@
 // Get the packages we need
 var express = require('express'),
     router = express.Router(),
-    mongoose = require('mongoose');
+    mongoose = require('mongoose'),
+    responses = require('./routes/response');
 
 // Read .env file
 require('dotenv').config();
@@ -13,7 +14,10 @@ var app = express();
 var port = process.env.PORT || 3000;
 
 // Connect to a MongoDB --> Uncomment this once you have a connection string!!
-//mongoose.connect(process.env.MONGODB_URI).catch(function (err) { console.error('MongoDB connection error:', err.message); });
+mongoose.connect(process.env.MONGODB_URI).then((res)=>{
+    // console.log("Test conn log",res.connection.db)
+
+}).catch(function (err) { console.error('MongoDB connection error:', err.message); });
 
 // Allow CORS so that backend and frontend could be put on different servers
 var allowCrossDomain = function (req, res, next) {
@@ -30,6 +34,10 @@ app.use(express.json());
 
 // Use routes as a module (see index.js)
 require('./routes')(app, router);
+
+// Keep errors and unknown routes consistent with the API response format
+app.use(responses.notFound);
+app.use(responses.errorHandler);
 
 // Start the server
 app.listen(port);
