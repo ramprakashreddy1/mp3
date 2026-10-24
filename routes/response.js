@@ -9,8 +9,8 @@ function sendResponse(res, status, message, data) {
     });
 }
 
-function notImplemented(req, res) {
-    return sendResponse(res, 501, 'Not implemented', {});
+function sendNoContent(res) {
+    return res.status(204).send();
 }
 
 function notFound(req, res) {
@@ -32,7 +32,7 @@ function errorHandler(err, req, res, next) {
 
 module.exports = {
     sendResponse: sendResponse,
-    notImplemented: notImplemented,
+    sendNoContent: sendNoContent,
     notFound: notFound,
     errorHandler: errorHandler
 };
